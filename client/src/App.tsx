@@ -6,6 +6,22 @@ type Recipe = {
   steps: string[];
 };
 
+function getCollegeReality(recipe: Recipe) {
+  const stepsCount = recipe.steps.length;
+
+  const tags = [];
+
+  if (stepsCount <= 5) tags.push("Quick to make");
+  if (stepsCount <= 7) tags.push("Low effort");
+  if (!recipe.ingredients.some(i => i.toLowerCase().includes("oven")))
+    tags.push("No oven needed");
+
+  tags.push("Minimal cleanup");
+  tags.push("College-friendly");
+
+  return tags;
+}
+
 function App() {
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredients, setIngredients] = useState<string[]>([]);
@@ -131,8 +147,19 @@ function App() {
           </ol>
         </div>
       )}
-    </div>
-  );
+
+      {recipe && (
+        <div style={{ marginTop: "1.5rem" }}>
+          <h3>College Reality Check</h3>
+          <ul>
+            {getCollegeReality(recipe).map((tag, idx) => (
+              <li key={idx}>✔️ {tag}</li>
+            ))}
+          </ul>
+        </div>
+    )}
+  </div>
+);
 }
 
 export default App;
