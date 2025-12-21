@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 
+type Scene = "kitchen" | "pantry" | "fridge" | "recipe";
+
 type Recipe = {
   title: string;
   ingredients: string[];
@@ -100,6 +102,9 @@ function App() {
     fridge: []
   });
 
+  const [scene, setScene] = useState<Scene>("kitchen");
+
+
   useEffect(() => {
     const saved = localStorage.getItem("inventory");
     if (saved) setInventory(JSON.parse(saved));
@@ -164,7 +169,9 @@ function App() {
         <div className="headerRow">
           <div>
             <h1 className="title">Dorm Kitchen 🍳</h1>
-            <p className="subtitle">What can you make with what you already have?</p>
+            <p className="subtitle">
+              What can you make with what you already have?
+            </p>
           </div>
 
           <button
@@ -175,90 +182,155 @@ function App() {
           </button>
         </div>
 
-        {/* Kitchen */}
-        <KitchenSection
-          label="Pantry"
-          emoji="🧺"
-          items={inventory.pantry}
-          onAdd={(item) =>
-            setInventory((inv) => ({
-              ...inv,
-              pantry: [...inv.pantry, item],
-            }))
-          }
-        />
+        {/* ---------- KITCHEN SCENE ---------- */}
+        {scene === "kitchen" && (
+          <>
+            <KitchenSection
+              label="Pantry"
+              emoji="🧺"
+              items={inventory.pantry}
+              onAdd={(item) =>
+                setInventory((inv) => ({
+                  ...inv,
+                  pantry: [...inv.pantry, item],
+                }))
+              }
+            />
 
-        <KitchenSection
-          label="Fridge"
-          emoji="❄️"
-          items={inventory.fridge}
-          onAdd={(item) =>
-            setInventory((inv) => ({
-              ...inv,
-              fridge: [...inv.fridge, item],
-            }))
-          }
-        />
+            <KitchenSection
+              label="Fridge"
+              emoji="❄️"
+              items={inventory.fridge}
+              onAdd={(item) =>
+                setInventory((inv) => ({
+                  ...inv,
+                  fridge: [...inv.fridge, item],
+                }))
+              }
+            />
 
+            <button
+              className="btn btnPrimary btnFull"
+              onClick={() => {
+                handleGenerateMeal();
+                setScene("recipe");
+              }}
+            >
+              Generate meal from my kitchen
+            </button>
+          </>
+        )}
 
-        {/* Generate */}
-        <button className="btn btnPrimary btnFull" onClick={handleGenerateMeal}>
-          Generate meal from my kitchen
-        </button>
+        {/* ---------- PANTRY SCENE ---------- */}
+        {scene === "pantry" && (
+          <>
+            <button className="btn btnGhost" onClick={() => setScene("kitchen")}>
+              ← Back to kitchen
+            </button>
 
-        {loading && <p className="muted"><LoadingDots /></p>}
+            <KitchenSection
+              label="Pantry"
+              emoji="🧺"
+              items={inventory.pantry}
+              onAdd={(item) =>
+                setInventory((inv) => ({
+                  ...inv,
+                  pantry: [...inv.pantry, item],
+                }))
+              }
+            />
+          </>
+        )}
 
-        {recipe && (
-          <div className="result">
-            <h2>{recipe.title}</h2>
+        {/* ---------- FRIDGE SCENE ---------- */}
+        {scene === "fridge" && (
+          <>
+            <button className="btn btnGhost" onClick={() => setScene("kitchen")}>
+              ← Back to kitchen
+            </button>
 
-            <h4>Ingredients</h4>
-            <ul>
-              {recipe.ingredients.map((ing, idx) => (
-                <li key={idx}>{ing}</li>
-              ))}
-            </ul>
-            
-            <h4>Steps</h4>
-            <ol>
-              {recipe.steps.map((step, idx) => (
-                <li key={idx}>{step}</li>
-              ))}
-            </ol>
-            
-            <div className="infoBox">
-              <strong>🧺 Used from your kitchen</strong>
-              <ul>
-                {recipe.used_from_pantry.map((i, idx) => (
-                  <li key={idx}>Pantry: {i}</li>
-                ))}
-                {recipe.used_from_fridge.map((i, idx) => (
-                  <li key={idx}>Fridge: {i}</li>
-                ))}
-              </ul>
+            <KitchenSection
+              label="Fridge"
+              emoji="❄️"
+              items={inventory.fridge}
+              onAdd={(item) =>
+                setInventory((inv) => ({
+                  ...inv,
+                  fridge: [...inv.fridge, item],
+                }))
+              }
+            />
+          </>
+        )}
 
-              {recipe.needs_to_buy.length > 0 && (
-                <>
-                  <strong>🛒 You may need to buy</strong>
+        {/* ---------- RECIPE SCENE ---------- */}
+        {scene === "recipe" && (
+          <>
+            <button className="btn btnGhost" onClick={() => setScene("kitchen")}>
+              ← Back to kitchen
+            </button>
+
+            {loading && (
+              <p className="muted">
+                <LoadingDots />
+              </p>
+            )}
+
+            {recipe && (
+              <div className="result">
+                <h2>{recipe.title}</h2>
+
+                <h4>Ingredients</h4>
+                <ul>
+                  {recipe.ingredients.map((ing, idx) => (
+                    <li key={idx}>{ing}</li>
+                  ))}
+                </ul>
+
+                <h4>Steps</h4>
+                <ol>
+                  {recipe.steps.map((step, idx) => (
+                    <li key={idx}>{step}</li>
+                  ))}
+                </ol>
+
+                <div className="infoBox">
+                  <strong>🧺 Used from your kitchen</strong>
                   <ul>
-                    {recipe.needs_to_buy.map((i, idx) => (
-                      <li key={idx}>{i}</li>
+                    {recipe.used_from_pantry?.map((i, idx) => (
+                      <li key={idx}>Pantry: {i}</li>
+                    ))}
+                    {recipe.used_from_fridge?.map((i, idx) => (
+                      <li key={idx}>Fridge: {i}</li>
                     ))}
                   </ul>
-                </>
-              )}
-            </div>
-            <div className="infoBox">
-              <strong>College Reality Check</strong>
-              <ul>
-                {realityTags.map((tag, idx) => (
-                  <li key={idx}>✔️ {tag}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+
+                  {recipe.needs_to_buy?.length > 0 && (
+                    <>
+                      <strong>🛒 You may need to buy</strong>
+                      <ul>
+                        {recipe.needs_to_buy.map((i, idx) => (
+                          <li key={idx}>{i}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </div>
+
+                <div className="infoBox">
+                  <strong>College Reality Check</strong>
+                  <ul>
+                    {realityTags.map((tag, idx) => (
+                      <li key={idx}>✔️ {tag}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </>
         )}
-      </div>
+</div>
+
     </div>
   );
 }
