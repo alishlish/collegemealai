@@ -2,13 +2,20 @@ const { llmGenerate } = require("../services/generator");
 
 async function generateRecipe(req, res) {
   try {
-    const { ingredients } = req.body;
+    const { inventory } = req.body;
 
-    if (!ingredients || ingredients.length === 0) {
-      return res.status(400).json({ error: "No ingredients provided" });
+    // Basic validation
+    if (
+      !inventory ||
+      (!inventory.pantry?.length && !inventory.fridge?.length)
+    ) {
+      return res.status(400).json({
+        error: "Kitchen is empty. Add items to pantry or fridge first.",
+      });
     }
 
-    const recipe = await llmGenerate(ingredients);
+    // Pantry-first LLM call
+    const recipe = await llmGenerate(inventory);
 
     res.json(recipe);
   } catch (err) {

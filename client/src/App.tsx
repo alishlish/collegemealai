@@ -5,12 +5,15 @@ type Recipe = {
   title: string;
   ingredients: string[];
   steps: string[];
+  used_from_pantry: string[];
+  used_from_fridge: string[];
+  needs_to_buy: string[];
 };
+
 
 type Inventory = {
   pantry: string[];
   fridge: string[];
-  tools: string[];
 };
 
 function getCollegeReality(recipe: Recipe) {
@@ -94,8 +97,7 @@ function App() {
   /* ---------- Inventory ---------- */
   const [inventory, setInventory] = useState<Inventory>({
     pantry: [],
-    fridge: [],
-    tools: [],
+    fridge: []
   });
 
   useEffect(() => {
@@ -198,17 +200,6 @@ function App() {
           }
         />
 
-        <KitchenSection
-          label="Cooking Tools"
-          emoji="🍳"
-          items={inventory.tools}
-          onAdd={(item) =>
-            setInventory((inv) => ({
-              ...inv,
-              tools: [...inv.tools, item],
-            }))
-          }
-        />
 
         {/* Generate */}
         <button className="btn btnPrimary btnFull" onClick={handleGenerateMeal}>
@@ -227,14 +218,36 @@ function App() {
                 <li key={idx}>{ing}</li>
               ))}
             </ul>
-
+            
             <h4>Steps</h4>
             <ol>
               {recipe.steps.map((step, idx) => (
                 <li key={idx}>{step}</li>
               ))}
             </ol>
+            
+            <div className="infoBox">
+              <strong>🧺 Used from your kitchen</strong>
+              <ul>
+                {recipe.used_from_pantry.map((i, idx) => (
+                  <li key={idx}>Pantry: {i}</li>
+                ))}
+                {recipe.used_from_fridge.map((i, idx) => (
+                  <li key={idx}>Fridge: {i}</li>
+                ))}
+              </ul>
 
+              {recipe.needs_to_buy.length > 0 && (
+                <>
+                  <strong>🛒 You may need to buy</strong>
+                  <ul>
+                    {recipe.needs_to_buy.map((i, idx) => (
+                      <li key={idx}>{i}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
             <div className="infoBox">
               <strong>College Reality Check</strong>
               <ul>
