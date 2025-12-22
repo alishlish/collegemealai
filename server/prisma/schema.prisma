@@ -1,0 +1,27 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model InventoryItem {
+  id        Int      @id @default(autoincrement())
+  name      String
+  location  String   // pantry | fridge
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+}
+
+model Recipe {
+  id             Int      @id @default(autoincrement())
+  title          String
+  ingredients    Json
+  steps          Json
+  usedPantry     Json
+  usedFridge     Json
+  needsToBuy     Json
+  createdAt      DateTime @default(now())
+}
