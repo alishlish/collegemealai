@@ -16,12 +16,10 @@ model InventoryItem {
 }
 
 model Recipe {
-  id             Int      @id @default(autoincrement())
-  title          String
-  ingredients    Json
-  steps          Json
-  usedPantry     Json
-  usedFridge     Json
-  needsToBuy     Json
-  createdAt      DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  title       String
+  ingredients Json
+  steps       Json
+  starred     Boolean  @default(false)
+  createdAt   DateTime @default(now())
 }

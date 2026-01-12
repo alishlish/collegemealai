@@ -1,20 +1,22 @@
 const { llmGenerate } = require("../services/generator");
+const prisma = require("../prismaClient");
 
 async function generateRecipe(req, res) {
   try {
-    console.log("REQ BODY:", req.body); // 👈 DEBUG
-
-    const inventory = req.body.inventory;
-
-    if (!inventory || !inventory.pantry || !inventory.fridge) {
-      return res.status(400).json({
-        error: "Invalid inventory payload",
-        received: req.body,
-      });
-    }
+    const { inventory } = req.body;
 
     const recipe = await llmGenerate(inventory);
-    res.json(recipe);
+
+    // ✅ Save ONLY the core recipe
+    const saved = await prisma.recipe.create({
+      data: {
+        title: recipe.title,
+        ingredients: recipe.ingredients,
+        steps: recipe.steps,
+      },
+    });
+
+    res.json(saved);
   } catch (err) {
     console.error("Recipe generation failed:", err);
     res.status(500).json({ error: "Failed to generate recipe" });

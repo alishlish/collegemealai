@@ -1,24 +1,21 @@
 require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
 
-const recipeRoutes = require("./routes/recipeRoutes");
+const recipeRoutes = require("./routes/recipeRoutes.js");
+const inventoryRoutes = require("./routes/inventoryRoutes.js");
+const plannerRoutes = require("./routes/plannerRoutes.js");
+const shoppingRoutes = require("./routes/shoppingRoutes.js");
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// sanity check
-app.get("/", (req, res) => {
-  res.send("Server running");
-});
+app.get("/", (_, res) => res.send("Server running"));
 
-// mount recipe routes
-app.use("/api", recipeRoutes);
+app.use("/api/recipes", recipeRoutes);
+app.use("/api/inventory", inventoryRoutes);
+app.use("/api/planner", plannerRoutes);
+app.use("/api/shopping", shoppingRoutes);
 
-const PORT = 5001;
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
+app.listen(5001, () => console.log("Server listening on port 5001"));
