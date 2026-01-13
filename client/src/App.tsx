@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import "/Users/alishamishra/Desktop/collegemealai/client/src/App.css";
-import { supabase } from "/Users/alishamishra/Desktop/collegemealai/client/src/supabaseClient.ts";
+import "./App.css";
+import { supabase } from "./supabaseClient";
 import { AuthGate } from "./components/AuthGate.tsx";
 import { Kitchen } from "./components/Kitchen.tsx";
 import { RecipeBook } from "./components/RecipeBook.tsx";

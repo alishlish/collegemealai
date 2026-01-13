@@ -16,6 +16,6 @@ app.get("/", (_, res) => res.send("Server running"));
 app.use("/api/recipes", recipeRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/planner", plannerRoutes);
-app.use("/api/shopping", shoppingRoutes); // ✅ THIS LINE IS CRITICAL
+app.use("/api/shopping", shoppingRoutes);
 
 app.listen(5001, () => console.log("Server listening on port 5001"));
