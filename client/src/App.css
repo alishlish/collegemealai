@@ -402,3 +402,150 @@ ol li {
   min-height: 74px; /* gives you a target */
 }
 
+/* ---------- Inventory list polish ---------- */
+
+.twoCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 14px;
+}
+
+.miniHeading {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.listRow:last-child {
+  border-bottom: none;
+}
+
+.itemName {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-transform: lowercase;
+
+  /* prevents long items from wrecking layout */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
+}
+
+/* Make remove buttons consistent + minimal */
+.btn.btnGhost {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+}
+
+.btn.btnGhost:hover {
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+.btn.btnGhost:active {
+  transform: translateY(1px);
+}
+
+/* Mobile: stack pantry + fridge */
+@media (max-width: 720px) {
+  .twoCols {
+    grid-template-columns: 1fr;
+  }
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fafafa;
+  border: 1px solid #eaeaea;
+  transition: background 0.15s ease, border 0.15s ease;
+}
+
+.listRow:hover {
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+}
+
+.itemMain {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.itemName {
+  font-size: 15px;
+  font-weight: 500;
+  color: #111;
+  letter-spacing: -0.01em;
+}
+
+.itemMeta {
+  font-size: 12px;
+  color: #8a8a8a;
+}
+
+.listRow .btnGhost {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #444;
+}
+
+.listRow .btnGhost:hover {
+  background: #efefef;
+}
+
+.input {
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.input::placeholder {
+  color: #aaa;
+}
+
+* {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}

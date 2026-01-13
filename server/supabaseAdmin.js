@@ -1,5 +1,3 @@
-console.log("ADMIN URL:", process.env.SUPABASE_URL);
-
 const { createClient } = require("@supabase/supabase-js");
 
 if (!process.env.SUPABASE_URL) {
